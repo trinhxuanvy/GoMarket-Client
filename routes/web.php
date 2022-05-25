@@ -16,7 +16,8 @@ use App\Http\Controllers\AdminController;
 */
 
 Route::prefix("admin")->group(function () {
-    Route::get("/", [AdminController::class, "index"]);
-    Route::get("/manage/store", [AdminController::class, "index"]);
+    //Route::get("/", [AdminController::class, "storeList"]);
+    Route::get("/manage/store", [AdminController::class, "storeList"])->name("storeList");
     Route::get("/manage/store/{id}", [AdminController::class, "index"]);
+    Route::post('/manage/store/updateStore', [AdminController::class, "updateStore"]);
 });

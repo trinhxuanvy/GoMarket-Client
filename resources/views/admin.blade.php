@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
 
   <title>Laravel</title>
 
@@ -41,10 +42,17 @@
   .dataTables_scroll {
     padding-top: 16px;
   }
-
   .logo-brand {
     width: 50px;
     height: 50px;
+  }
+
+  .dataTables_empty {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    border: none;
   }
   </style>
 </head>
@@ -137,9 +145,9 @@
       <main class="p-4 ">
         <div class="p-sm-5 p-3 shadow rounded">
           <div class="d-flex justify-content-end">
-            <form action="" method="get" class="me-2">
+            <form action="<?php echo route('storeList') ?>" method="get" class="me-2">
               <div class="input-group mr-2">
-                <input type="text" class="form-control" placeholder="Tên, chủ cửa hàng ..."
+                <input type="text" name="search" class="form-control" placeholder="Tên, chủ cửa hàng ..."
                   aria-label="Recipient's username" aria-describedby="button-addon2">
                 <button class="btn btn-outline-secondary d-flex align-items-center justify-content-center" type="submit"
                   id="button-addon2"><span class="material-icons">
@@ -158,14 +166,15 @@
             <table id="tableData" class="table table-bordered table-hover table-fixed border-top">
               <thead>
                 <tr>
-                  <th style="min-width: 200px">Tên cửa hàng</th>
+                  <th style="min-width: 250px">Tên cửa hàng</th>
                   <th style="min-width: 200px">Tình trạng</th>
                   <th style="min-width: 200px">Chủ cửa hàng</th>
                   <th style="min-width: 500px">Địa chỉ</th>
-                  <th style="min-width: 200px">Mã số thuế</th>
-                  <th style="min-width: 200px">Chứng nhận an toàn thực phẩm</th>
-                  <th style="min-width: 200px">Chứng nhận kinh doanh</th>
-                  <th>Cài đặt</th>
+                  <th style="min-width: 150px">Mã số thuế</th>
+                  <th style="min-width: 250px">Chứng nhận an toàn thực phẩm</th>
+                  <th style="min-width: 250px">Chứng nhận kinh doanh</th>
+                  <th style="min-width: 200px">Ngày đăng ký</th>
+                  <th style="min-width: 80px">Cài đặt</th>
                 </tr>
               </thead>
               <tbody>
@@ -185,9 +194,10 @@
                   <td>{{ $item["tax"] }}</td>
                   <td>{{ $item["certification"] }}</td>
                   <td>{{ $item["businessLicense"] }}</td>
+                  <td>{{ Carbon\Carbon::parse($item["createdAt"])->format('d/m/Y') }}</td>
                   <td>
-                    <div class=" d-flex align-items-center justify-content-center"><button title="Xác nhận đăng ký"
-                        class="btn btn-success btn-sm d-flex align-items-center justify-content-center"><i
+                    <div class=" d-flex align-items-center justify-content-center"><button title="Xác nhận đăng ký" value="{{ $item["_id"] }}"
+                        class="btn btn-success btn-sm d-flex align-items-center justify-content-center btn-click-check"><i
                           class="material-icons fs-6">check_circle</i></button>
                       <button title="Chặn cửa hàng"
                         class="btn btn-primary btn-sm d-flex align-items-center justify-content-center ms-2"><i
@@ -202,17 +212,24 @@
             <nav aria-label="Page navigation">
               <ul class="pagination">
                 <li class="page-item">
-                  <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                  </a>
+                    <a class="page-link <?php if ($prevPage === 'javascript:void(0)') echo 'btn disabled'; ?>" href="{{ $prevPage }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
                 </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                @for ($i = 0; $i < 5; $i++)
+                    @if ($i + $currentPage <= $pageNo)
+                        <li class="page-item">
+                        <a class="page-link" href="{{ $paginationUrls[$i]["url"] }}">
+                            {{ $paginationUrls[$i]["page"]}}
+                        </a>
+                    </li>
+                    @endif
+
+                @endfor
                 <li class="page-item">
-                  <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                  </a>
+                    <a class="page-link <?php if ($nextPage === 'javascript:void(0)') echo 'btn disabled'; ?>" href="{{ $nextPage }}" aria-label="Previous">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
                 </li>
               </ul>
             </nav>
@@ -221,6 +238,13 @@
       </main>
     </div>
   </div>
+  <div id="pageLoading" class="position-fixed d-none top-0 left-0 d-flex align-items-center justify-content-center w-100 vh-100 bg-dark bg-opacity-25" style="z-index: 1000000">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only"></span>
+      </div>
+  </div>
+
+  <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
   <script src="{{ asset('resources/js/scripts.js') }}"></script>
   <script>
@@ -236,15 +260,35 @@
         right: 1
       },
       language: {
-        info: "Số dòng: _TOTAL_"
+        info: "Số dòng: _TOTAL_",
+        emptyTable: "<img src='{{ asset('resources/images/no-data.gif') }}' style='width: 300px' />"
       }
     });
+
+    var headers = {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+
+    $(".btn-click-check").click(function (e) {
+        e.preventDefault();
+        $("#pageLoading").removeClass("d-none");
+        $.ajax({
+        type: "post",
+        url: "./store/updateStore",
+        headers: headers,
+        data: {id: `${$(this).val()}`},
+        dataType: "json",
+        success: function (response) {
+            if (response) {
+                $("#pageLoading").addClass("d-none");
+            }
+            console.log(response);
+        }
+    });
+    });
+
   });
   </script>
 </body>
-
-
-
-
 
 </html>
