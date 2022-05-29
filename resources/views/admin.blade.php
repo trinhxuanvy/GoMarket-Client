@@ -54,6 +54,14 @@
     transform: translate(-50%, -50%) !important;
     border: none;
   }
+
+  .custom-image {
+      width: 50px;
+      height: 50px;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+  }
   </style>
 </head>
 
@@ -168,6 +176,7 @@
                 <tr>
                   <th style="min-width: 250px">Tên cửa hàng</th>
                   <th style="min-width: 200px">Tình trạng</th>
+                  <th style="min-width: 200px">Chặn</th>
                   <th style="min-width: 200px">Chủ cửa hàng</th>
                   <th style="min-width: 500px">Địa chỉ</th>
                   <th style="min-width: 150px">Mã số thuế</th>
@@ -182,25 +191,30 @@
                 <?php $item = json_decode(json_encode($store),TRUE); ?>
                 <tr class='@if ($item["status"] === 0) disable @else @endif'>
                   <td>{{ $item["storeName"] }}</td>
-                  <td>
+                  <td class="status">
                     @if ($item["status"] === 0)
                     Chưa xác nhận
                     @else
                     Đã xác nhận
                     @endif
                   </td>
+                  <td class="block">
+                    @if ($item["disable"] === true)
+                    Đã chặn
+                    @endif
+                  </td>
                   <td>{{ $item["ownerName"] }}</td>
                   <td>{{ $item["ward"] }}, {{ $item["district"] }}, {{ $item["province"] }}, {{ $item["address"] }}</td>
                   <td>{{ $item["tax"] }}</td>
-                  <td>{{ $item["certification"] }}</td>
-                  <td>{{ $item["businessLicense"] }}</td>
+                  <td><div class="custom-image" style="background-image: url('{{ $item["certification"] }}')"></div></td>
+                  <td><div class="custom-image" style="background-image: url('{{ $item["businessLicense"] }}')"></div></td>
                   <td>{{ Carbon\Carbon::parse($item["createdAt"])->format('d/m/Y') }}</td>
                   <td>
                     <div class=" d-flex align-items-center justify-content-center"><button title="Xác nhận đăng ký" value="{{ $item["_id"] }}"
                         class="btn btn-success btn-sm d-flex align-items-center justify-content-center btn-click-check"><i
                           class="material-icons fs-6">check_circle</i></button>
-                      <button title="Chặn cửa hàng"
-                        class="btn btn-primary btn-sm d-flex align-items-center justify-content-center ms-2"><i
+                      <button title="Chặn cửa hàng" value="{{ $item["_id"] }}"
+                        class="btn btn-primary btn-sm d-flex align-items-center justify-content-center ms-2 btn-click-block"><i
                           class="material-icons fs-6">lock</i></button>
                     </div>
                   </td>
@@ -271,22 +285,44 @@
 
     $(".btn-click-check").click(function (e) {
         e.preventDefault();
+        var item = this;
         $("#pageLoading").removeClass("d-none");
         $.ajax({
-        type: "post",
-        url: "./store/updateStore",
-        headers: headers,
-        data: {id: `${$(this).val()}`},
-        dataType: "json",
-        success: function (response) {
-            if (response) {
+            type: "post",
+            url: "./store/verifyStore",
+            headers: headers,
+            data: {id: `${$(this).val()}`},
+            dataType: "json",
+            success: function (response) {
                 $("#pageLoading").addClass("d-none");
+                if (response?.msg?._id) {
+                    const tr = $(item).parents('tr');
+                    $(tr).removeClass("disable");
+                    $(tr).find("td.status").html("Đã xác nhận");
+                }
             }
-            console.log(response);
-        }
-    });
+        });
     });
 
+    $(".btn-click-block").click(function (e) {
+        e.preventDefault();
+        var item = this;
+        $("#pageLoading").removeClass("d-none");
+            $.ajax({
+            type: "post",
+            url: "./store/blockStore",
+            headers: headers,
+            data: {id: `${$(this).val()}`},
+            dataType: "json",
+            success: function (response) {
+                $("#pageLoading").addClass("d-none");
+                if (response?.msg?._id) {
+                    const tr = $(item).parents('tr');
+                    $(tr).find("td.block").html(!response?.msg?.disable ? 'Đã chặn' : '');
+                }
+            }
+        });
+    });
   });
   </script>
 </body>
