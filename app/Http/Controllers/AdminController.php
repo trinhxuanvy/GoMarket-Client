@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Log;
+use Illuminate\Support\Facades\Cookie;
 
 class AdminController extends Controller
 {
@@ -13,11 +13,11 @@ class AdminController extends Controller
     public function __construct() {}
 
     public function index() {
-        $stores = Http::get("http://localhost:3000/api/v1/store");
-        return view('admin', ["stores"=>$stores->json()]);
+        return redirect('/admin/manage/store');
     }
 
     public function storeList(Request $request) {
+        $bearer = Cookie::get('Bearer');
         $paginationSize = 2;
         $query = array("page"=>1, "search"=>"");
         $paginationUrls = array();
@@ -31,7 +31,12 @@ class AdminController extends Controller
             $query["page"] = $request->page;
         }
 
-        $stores = Http::get("http://localhost:3000/api/v1/store", $query);
+        $stores = Http::withHeaders(["authentication"=>$bearer])->get("http://localhost:3000/api/v1/store", $query);
+
+        if (isset($stores->json()["status"])) {
+            return redirect("/auth/login");
+        }
+
         $pageNo = ceil($stores->json()["total"] / $paginationSize);
 
         for($i = $query["page"]; $i <= $pageNo; $i++) {
@@ -53,8 +58,13 @@ class AdminController extends Controller
         ]);
     }
 
-    public function updateStore(Request $request) {
+    public function verifyStore(Request $request) {
         $stores = Http::post("http://localhost:3000/api/v1/store/verify", ["id"=>$request->all()["id"]]);
+        return response()->json(array("msg"=>$stores->json()), 200);
+    }
+
+    public function blockStore(Request $request) {
+        $stores = Http::post("http://localhost:3000/api/v1/store/block", ["id"=>$request->all()["id"]]);
         return response()->json(array("msg"=>$stores->json()), 200);
     }
 }
