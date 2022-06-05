@@ -108,7 +108,7 @@
                 <div class="">
                     <img src="{{ asset('resources/images/logo.png') }}" alt="Go Market Admin" class="d-block mx-auto" height="140" width="140">
                     <h2 class="text-center mt-3">Đăng ký tài khoản</h2>
-                    <form action="{{ route("register") }}" method="post" class="mt-3">
+                    <form action="{{ route('user-register') }}" method="post" class="mt-3">
                         @csrf
                         <div class="p-3 bg-white border-radius-16">
                             <div class="mb-3">
@@ -126,7 +126,7 @@
                         </div>
                         <button type="submit" class="btn btn-success d-block mx-auto mt-3">Đăng ký</button>
                     </form>
-                    <p class="text-center mt-5" style="font-size: 14px">Bạn đã có tài khoản? <a href="{{ route("login") }}">Đăng nhập ngay</a></p>
+                    <p class="text-center mt-5" style="font-size: 14px">Bạn đã có tài khoản? <a href="{{ route('user-login') }}">Đăng nhập ngay</a></p>
                 </div>
             </div>
 		</div>

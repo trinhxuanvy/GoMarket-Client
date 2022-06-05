@@ -31,7 +31,7 @@ class AdminController extends Controller
             $query["page"] = $request->page;
         }
 
-        $stores = Http::withHeaders(["authentication"=>$bearer])->get("http://localhost:3000/api/v1/store", $query);
+        $stores = Http::withHeaders(["authorization"=>$bearer])->get("http://localhost:3000/api/v1/store", $query);
 
         if (isset($stores->json()["status"])) {
             return redirect("/auth/login");
@@ -59,12 +59,14 @@ class AdminController extends Controller
     }
 
     public function verifyStore(Request $request) {
-        $stores = Http::post("http://localhost:3000/api/v1/store/verify", ["id"=>$request->all()["id"]]);
+        $bearer = Cookie::get('Bearer');
+        $stores = Http::withHeaders(["authorization"=>$bearer])->post("http://localhost:3000/api/v1/store/verify", ["id"=>$request->all()["id"]]);
         return response()->json(array("msg"=>$stores->json()), 200);
     }
 
     public function blockStore(Request $request) {
-        $stores = Http::post("http://localhost:3000/api/v1/store/block", ["id"=>$request->all()["id"]]);
+        $bearer = Cookie::get('Bearer');
+        $stores = Http::withHeaders(["authorization"=>$bearer])->post("http://localhost:3000/api/v1/store/block", ["id"=>$request->all()["id"]]);
         return response()->json(array("msg"=>$stores->json()), 200);
     }
 }

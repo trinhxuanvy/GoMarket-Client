@@ -87,7 +87,7 @@
           <li>
             <hr class="dropdown-divider" />
           </li>
-          <li><a class="dropdown-item" href="#!">Đăng xuất</a></li>
+          <li><a class="dropdown-item" href="{{ route("admin-logout") }}">Đăng xuất</a></li>
         </ul>
       </li>
     </ul>
@@ -273,6 +273,8 @@
         left: 1,
         right: 1
       },
+      ordering: true,
+      order: [[9, "asc"]],
       language: {
         info: "Số dòng: _TOTAL_",
         emptyTable: "<img src='{{ asset('resources/images/no-data.gif') }}' style='width: 300px' />"

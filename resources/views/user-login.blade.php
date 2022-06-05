@@ -76,11 +76,11 @@
   }
 
   .item-center {
-      position: sticky;
-      top: 0;
-      margin: 64px 0;
-      left: 50%;
-      transform: translateX(-50%);
+    position: sticky;
+    top: 0;
+    margin: 64px 0;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .bg-login {
@@ -89,6 +89,7 @@
       background-position: center;
       background-size: cover;
       background-attachment: fixed;
+      height: 100vh;
   }
 
   .bottom-32 {
@@ -107,8 +108,8 @@
 			<div class="border-radius-16 shadow-2 max-width-350 p-4 item-center bg-light" style="width: 350px;">
                 <div class="">
                     <img src="{{ asset('resources/images/logo.png') }}" alt="Go Market Admin" class="d-block mx-auto" height="140" width="140">
-                    <h2 class="text-center mt-3">Đăng ký tài khoản</h2>
-                    <form action="{{ route("register") }}" method="post" class="mt-3">
+                    <h2 class="text-center mt-3">Đăng nhập</h2>
+                    <form action="{{ route('user-login') }}" method="post" class="mt-3">
                         @csrf
                         <div class="p-3 bg-white border-radius-16">
                             <div class="mb-3">
@@ -119,14 +120,10 @@
                               <label for="password" class="form-label">Mật khẩu</label>
                               <input class="form-control" name="password" type="password" id="password" required>
                             </div>
-                            <div class="mb-3">
-                                <label for="prePassword" class="form-label">Nhập lại mật khẩu</label>
-                                <input class="form-control" type="password" id="prePassword" required>
-                            </div>
                         </div>
-                        <button type="submit" class="btn btn-success d-block mx-auto mt-3">Đăng ký</button>
+                        <button type="submit" class="btn btn-success d-block mx-auto mt-3">Đăng nhập</button>
                     </form>
-                    <p class="text-center mt-5" style="font-size: 14px">Bạn đã có tài khoản? <a href="{{ route("login") }}">Đăng nhập ngay</a></p>
+                    <p class="text-center mt-5" style="font-size: 14px">Bạn chưa có tài khoản? <a href="{{ route('user-register') }}">Đăng ký ngay</a></p>
                 </div>
             </div>
 		</div>

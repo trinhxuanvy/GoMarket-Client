@@ -142,48 +142,11 @@
               Danh mục
             </a>
             <div class="sb-sidenav-menu-heading">Quản lý cửa hàng</div>
-            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"
-              aria-expanded="false">
-              <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+            <a class="nav-link collapsed" href="{{ route("allStore") }}">
+              <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
               Danh sách cửa hàng
               <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
             </a>
-            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
-              aria-expanded="false" aria-controls="collapsePages">
-              <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-              Chức năng
-              <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-            </a>
-            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-              <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth"
-                  aria-expanded="false" aria-controls="pagesCollapseAuth">
-                  Thêm cửa hàng
-                  <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                </a>
-              </nav>
-            </div>
-            <div class="sb-sidenav-menu-heading">Quản lý người dùng</div>
-            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseUsers"
-              aria-expanded="false" aria-controls="collapseUsers">
-              <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-              Danh sách người dùng
-              <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-            </a>
-            <div class="collapse" id="collapseUsers" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-              <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth"
-                  aria-expanded="false" aria-controls="pagesCollapseAuth">
-                  Khách hàng
-                  <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                </a>
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth"
-                  aria-expanded="false" aria-controls="pagesCollapseAuth">
-                  Admin
-                  <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                </a>
-              </nav>
-            </div>
           </div>
         </div>
       </nav>
@@ -191,7 +154,7 @@
     <div id="layoutSidenav_content">
       <main class="p-4 ">
         <div class="p-sm-5 p-3 shadow-2 border-radius-16">
-            <form action="<?php echo route('profile') ?>" method="post" class="me-2">
+            <form action="./{{ $item['_id'] }}" method="post" class="me-2">
                 @csrf
                 <div class="row">
                     <div class="col-4">
@@ -253,7 +216,8 @@
                     <div class="col-8 ps-4">
                         <div class="row bg-secondary p-2 border-radius-16 bg-opacity-10 h-100">
                             <div class="col-6 py-3">
-                                <div class="no-image position-relative" id="imageCer" @if ($item["certification"]) style="background-image: url('{{ $item["certification"] }}')" @endif>
+                                <h6>Chứng nhận an toàn thực phẩm</h6>
+                                <div class="no-image position-relative mt-3" id="imageCer" @if ($item["certification"]) style="background-image: url('{{ $item["certification"] }}')" @endif>
                                     <div class="loader bg-opacity-10 bg-info d-none" id="loaderCer">
                                         <div class="d-flex justify-content-center align-items-center h-100">
                                             <div class="spinner-border text-success" role="status">
@@ -266,7 +230,8 @@
                                 <input type="file" id="inputCer" accept="image/*" hidden>
                             </div>
                             <div class="col-6 py-3">
-                                <div class="no-image position-relative" id="imageBus" @if ($item["businessLicense"]) style="background-image: url('{{ $item["businessLicense"] }}')" @endif>
+                                <h6>Chứng nhận kinh doanh</h6>
+                                <div class="no-image position-relative mt-3" id="imageBus" @if ($item["businessLicense"]) style="background-image: url('{{ $item["businessLicense"] }}')" @endif>
                                     <div class="loader bg-opacity-10 bg-info d-none" id="loaderBus">
                                         <div class="d-flex justify-content-center align-items-center h-100">
                                             <div class="spinner-border text-success" role="status">
@@ -340,7 +305,7 @@
 
             $.ajax({
                 type: "post",
-                url: "./profile/uploadImage",
+                url: "{{ route('uploadFile') }}",
                 headers: headers,
                 async: true,
                 data: {
@@ -375,7 +340,7 @@
 
             $.ajax({
                 type: "post",
-                url: "./profile/uploadImage",
+                url: "{{ route('uploadFile') }}",
                 headers: headers,
                 async: true,
                 data: {
