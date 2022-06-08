@@ -7,6 +7,8 @@ use App\Http\Controllers\ManageStoreController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthUserController;
 use App\Http\Controllers\UploadFileController;
+use App\Http\Controllers\StoreController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,4 +59,9 @@ Route::prefix("user")->group(function () {
 
 Route::prefix("upload")->group(function () {
     Route::post("/image", [UploadFileController::class, "uploadImage"])->name("uploadFile");
+});
+
+Route::prefix("store")->group(function () {
+    Route::get("/", [StoreController::class, "index"]);
+    Route::get("/product/{id}", [ProductController::class, "detail"]);
 });
