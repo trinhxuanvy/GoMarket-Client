@@ -12,7 +12,7 @@ class ManageStoreController extends Controller
     public function __construct() {}
 
     public function index() {
-        //return redirect('/admin/manage/store');
+        return redirect('/user/manage/all-store');
     }
 
     public function profile(Request $request) {
@@ -25,7 +25,7 @@ class ManageStoreController extends Controller
         }
 
         if (!isset($store->json()["data"]["store"])) {
-            return view('manage-store', ["store"=>[]]);
+            return redirect("/user/auth/login");
         }
 
         return view('manage-store', ["store"=>$store->json()["data"]["store"]["entities"]]);

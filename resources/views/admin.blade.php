@@ -175,6 +175,8 @@
               <thead>
                 <tr>
                   <th style="min-width: 250px">Tên cửa hàng</th>
+                  <th style="min-width: 200px">Logo</th>
+                  <th style="min-width: 200px">Ảnh đại diện</th>
                   <th style="min-width: 200px">Tình trạng</th>
                   <th style="min-width: 200px">Chặn</th>
                   <th style="min-width: 200px">Chủ cửa hàng</th>
@@ -191,6 +193,8 @@
                 <?php $item = json_decode(json_encode($store),TRUE); ?>
                 <tr class='@if ($item["status"] === 0) disable @else @endif'>
                   <td>{{ $item["storeName"] }}</td>
+                  <td><div class="custom-image" style="background-image: url('{{ $item["logo"] }}')"></div></td>
+                  <td><div class="custom-image" style="background-image: url('{{ $item["backgroundLogo"] }}')"></div></td>
                   <td class="status">
                     @if ($item["status"] === 0)
                     Chưa xác nhận
