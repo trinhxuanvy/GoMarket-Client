@@ -55,6 +55,8 @@ Route::prefix("user")->group(function () {
     Route::get("/auth/register", [AuthUserController::class, "register"])->name("user-register");
     Route::post("/auth/register", [AuthUserController::class, "postRegister"]);
     Route::get("/auth/logout", [AuthUserController::class, "logout"])->name("user-logout");
+    Route::get("/account", [AuthUserController::class, "account"])->name("user-account");
+    Route::post("/account/update", [AuthUserController::class, "updateAccount"])->name("userUpdateAccount");
 });
 
 Route::prefix("upload")->group(function () {

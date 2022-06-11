@@ -119,7 +119,7 @@
         <button class="btn btn-secondary dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown"
           aria-expanded="false">Tài khoản</button>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item" href="#!">Thay đổi thông tin</a></li>
+          <li><a class="dropdown-item" href="{{ route("user-account") }}">Thay đổi thông tin</a></li>
           <li><a class="dropdown-item" href="#!">Tình trạng hoạt động</a></li>
           <li>
             <hr class="dropdown-divider" />
@@ -216,7 +216,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Thêm cửa hàng</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -262,11 +262,76 @@
                                             <input type="text" class="form-control" id="address" name="address" value="" required >
                                         </div>
                                     </div>
-                                    <input type="text" name="certification" id="certificationId" value="1" hidden required>
-                                    <input type="text" name="businessLicense" id="businessLicenseId" value="2" hidden required>
+                                    <input type="text" name="certification" id="certificationId" value="" hidden required>
+                                    <input type="text" name="businessLicense" id="businessLicenseId" value="" hidden required>
+                                    <input type="text" name="logo" id="logoId" value="" hidden required>
+                                    <input type="text" name="backgroundLogo" id="backgroundLogoId" value="" hidden required>
                                 </div>
                             </div>
                         </form>
+                    </div>
+
+                    <div class="col-12 px-2 mt-3">
+                        <div class="w-100 p-3">
+                            <div class="row bg-secondary p-2 border-radius-16 bg-opacity-10 h-100">
+                                <div class="col-12 py-3">
+                                    <p>Logo</p>
+                                    <div class="no-image h-300px position-relative mt-3" id="imageLogo">
+                                        <div class="loader bg-opacity-10 bg-info d-none" id="loaderLogo">
+                                            <div class="d-flex justify-content-center align-items-center h-100">
+                                                <div class="spinner-border text-success" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                  </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" id="btnLogo" class="btn btn-success d-block m-auto mt-3">Chọn ảnh khác</button>
+                                    <input type="file" id="inputLogo" accept="image/*" hidden>
+                                </div>
+                                <div class="col-12 py-3">
+                                    <p>Ảnh đại diện</p>
+                                    <div class="no-image h-300px position-relative mt-3" id="imageBg">
+                                        <div class="loader bg-opacity-10 bg-info d-none" id="loaderBg">
+                                            <div class="d-flex justify-content-center align-items-center h-100">
+                                                <div class="spinner-border text-success" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                  </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" id="btnBg" class="btn btn-success d-block m-auto mt-3">Chọn ảnh khác</button>
+                                    <input type="file" id="inputBg" accept="image/*" hidden>
+                                </div>
+                                <div class="col-12 py-3">
+                                    <h6>Chứng nhận an toàn thực phẩm</h6>
+                                    <div class="no-image position-relative mt-3" id="imageCer">
+                                        <div class="loader bg-opacity-10 bg-info d-none" id="loaderCer">
+                                            <div class="d-flex justify-content-center align-items-center h-100">
+                                                <div class="spinner-border text-success" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" id="btnCer" class="btn btn-success d-block m-auto mt-3">Chọn ảnh khác</button>
+                                    <input type="file" id="inputCer" accept="image/*" hidden>
+                                </div>
+                                <div class="col-12 py-3">
+                                    <h6>Chứng nhận kinh doanh</h6>
+                                    <div class="no-image position-relative mt-3" id="imageBus">
+                                        <div class="loader bg-opacity-10 bg-info d-none" id="loaderBus">
+                                            <div class="d-flex justify-content-center align-items-center h-100">
+                                                <div class="spinner-border text-success" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" id="btnBus" class="btn btn-success d-block m-auto mt-3">Chọn ảnh khác</button>
+                                    <input type="file" id="inputBus" accept="image/*" hidden>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-12 px-2 mt-3">
                         <div class="w-100 p-3">
@@ -432,6 +497,78 @@
 
         $("#addStoreForm").submit();
 
+    });
+
+    $("#inputLogo").change(function (e) {
+        e.preventDefault();
+        $('#loaderLogo').removeClass('d-none');
+        const fileList = e.target.files;
+        let fileContent = "";
+
+        const fr = new FileReader();
+        fr.addEventListener("load", function () {
+            fileContent = fr.result;
+
+            $.ajax({
+                type: "post",
+                url: "{{ route('uploadFile') }}",
+                headers: headers,
+                async: true,
+                data: {
+                    image: fileContent,
+                    name: e.target.files[0].name,
+                    type: e.target.files[0].type,
+                    extension: e.target.files[0].name.split('.').pop()
+                },
+                dataType: 'json',
+                success: function (response) {
+                    $('#loaderLogo').addClass('d-none');
+                    if (response?.msg?.imageUrl) {
+                        console.log(response?.msg?.imageUrl)
+                        $('#imageLogo').css('background-image', 'url(' + response?.msg?.imageUrl + ')');
+                        $("#logoId").val(response?.msg?.imageUrl);
+                    }
+                }
+            })
+        });
+
+        fr.readAsDataURL(fileList[0]);
+    });
+
+    $("#inputBg").change(function (e) {
+        e.preventDefault();
+        $('#loaderBg').removeClass('d-none');
+        const fileList = e.target.files;
+        let fileContent = "";
+
+        const fr = new FileReader();
+        fr.addEventListener("load", function () {
+            fileContent = fr.result;
+
+            $.ajax({
+                type: "post",
+                url: "{{ route('uploadFile') }}",
+                headers: headers,
+                async: true,
+                data: {
+                    image: fileContent,
+                    name: e.target.files[0].name,
+                    type: e.target.files[0].type,
+                    extension: e.target.files[0].name.split('.').pop()
+                },
+                dataType: 'json',
+                success: function (response) {
+                    $('#loaderBg').addClass('d-none');
+                    if (response?.msg?.imageUrl) {
+                        console.log(response?.msg?.imageUrl)
+                        $('#imageBg').css('background-image', 'url(' + response?.msg?.imageUrl + ')');
+                        $("#backgroundLogoId").val(response?.msg?.imageUrl);
+                    }
+                }
+            })
+        });
+
+        fr.readAsDataURL(fileList[0]);
     });
   });
   </script>

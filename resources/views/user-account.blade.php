@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-<?php $item = json_decode(json_encode($store),TRUE); ?>
+<?php $item = json_decode(json_encode($user),TRUE); ?>
 
 <head>
   <meta charset="utf-8">
@@ -158,58 +158,64 @@
     <div id="layoutSidenav_content">
       <main class="p-4 ">
         <div class="p-sm-5 p-3 shadow-2 border-radius-16">
-            <form action="./{{ $item['_id'] }}" method="post" class="me-2">
+            <form action="{{ route("userUpdateAccount") }}" method="post" class="me-2">
                 @csrf
-                <div class="row">
-                    <div class="col-4">
+                <div class="row justify-content-center">
+                    <div class="col-8">
                         <div class="ps-2">
                             <div class="row p-2 pb-4 bg-secondary border-radius-16 bg-opacity-10">
-                                <div class="col-12">
-                                    <label for="storeName" class="col-form-label">Tên cửa hàng</label>
+                                <div class="col-6">
+                                    <label for="name" class="col-form-label">Họ tên</label>
                                     <div class="">
-                                        <input type="text" class="form-control" name="storeName" id="storeName" value="{{ $item["storeName"] }}">
+                                        <input type="text" class="form-control" name="name" id="name" value="{{ $item["name"] }}">
                                     </div>
                                 </div>
-                                <div class="col-8 mt-2">
-                                    <label for="tax" class="col-form-label">Tax</label>
+                                <div class="col-6 mt-2">
+                                    <label for="gender" class="col-form-label">Giới tính</label>
                                     <div class="">
-                                        <input type="text" class="form-control" id="tax" name="tax" value="{{ $item["tax"] }}">
+                                        <input type="text" class="form-control" id="gender" name="gender" value="{{ $item["gender"] }}">
                                     </div>
                                 </div>
-                                <div class="col-4 mt-2">
-                                    <label for="rating" class="col-form-label">Đánh giá</label>
+                                <div class="col-6 mt-2">
+                                    <label for="identity" class="col-form-label">CMND/CCCD</label>
                                     <div class="">
-                                        <input type="text" class="form-control" id="rating" name="rating" value="{{ $item["rating"] }}" disabled>
+                                        <input type="text" class="form-control" id="identity" name="identity" value="{{ $item["identity"] }}">
                                     </div>
                                 </div>
-                                <div class="col-12 mt-2">
-                                    <label for="province" class="col-form-label">Tỉnh/Thành phố</label>
+                                <div class="col-6 mt-2">
+                                    <label for="dateOfBirth" class="col-form-label">Ngày sinh</label>
                                     <div class="">
-                                        <input type="text" class="form-control" id="province" name="province" value="{{ $item["province"] }}">
+                                        <input type="text" class="form-control" id="dateOfBirth" name="dateOfBirth" value="{{ $item["dateOfBirth"] }}">
                                     </div>
                                 </div>
-                                <div class="col-12 mt-2">
+                                <div class="col-6 mt-2">
+                                    <label for="phone" class="col-form-label">Tỉnh/Thành phố</label>
+                                    <div class="">
+                                        <input type="text" class="form-control" id="phone" name="phone" value="{{ $item["phone"] }}">
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-2">
                                     <label for="district" class="col-form-label">Quận/Huyện</label>
                                     <div class="">
                                         <input type="text" class="form-control" id="district" name="district" value="{{ $item["district"] }}">
                                     </div>
                                 </div>
-                                <div class="col-12 mt-2">
+                                <div class="col-6 mt-2">
                                     <label for="ward" class="col-form-label">Xã/Thị trấn</label>
                                     <div class="">
                                         <input type="text" class="form-control" id="ward" name="ward" value="{{ $item["ward"] }}">
                                     </div>
                                 </div>
-                                <div class="col-12 mt-2">
+                                <div class="col-6 mt-2">
                                     <label for="address" class="col-form-label">Địa chỉ</label>
                                     <div class="">
                                         <input type="text" class="form-control" id="address" name="address" value="{{ $item["address"] }}">
                                     </div>
                                 </div>
-                                <div class="col-12 py-3">
-                                    <p>Logo</p>
-                                    <div class="no-image h-300px position-relative mt-3" id="imageLogo" @if ($item["logo"]) style="background-image: url('{{ $item["logo"] }}')" @endif>
-                                        <div class="loader bg-opacity-10 bg-info d-none" id="loaderLogo">
+                                <div class="col-6 py-3">
+                                    <p>Mặt trước CMND</p>
+                                    <div class="no-image h-300px position-relative mt-3" id="imageFIC" @if ($item["frontIdentityCard"]) style="background-image: url('{{ $item["frontIdentityCard"] }}')" @endif>
+                                        <div class="loader bg-opacity-10 bg-info d-none" id="loaderFIC">
                                             <div class="d-flex justify-content-center align-items-center h-100">
                                                 <div class="spinner-border text-success" role="status">
                                                     <span class="visually-hidden">Loading...</span>
@@ -217,13 +223,27 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="button" id="btnLogo" class="btn btn-success d-block m-auto mt-3">Chọn ảnh khác</button>
-                                    <input type="file" id="inputLogo" accept="image/*" hidden>
+                                    <button type="button" id="btnFIC" class="btn btn-success d-block m-auto mt-3">Chọn ảnh khác</button>
+                                    <input type="file" id="inputFIC" accept="image/*" hidden>
                                 </div>
-                                <div class="col-12 py-3">
+                                <div class="col-6 py-3">
+                                    <p>Mặt sau CMND</p>
+                                    <div class="no-image h-300px position-relative mt-3" id="imageBIC" @if ($item["behindIdentityCard"]) style="background-image: url('{{ $item["behindIdentityCard"] }}')" @endif>
+                                        <div class="loader bg-opacity-10 bg-info d-none" id="loaderBIC">
+                                            <div class="d-flex justify-content-center align-items-center h-100">
+                                                <div class="spinner-border text-success" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                  </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" id="btnBIC" class="btn btn-success d-block m-auto mt-3">Chọn ảnh khác</button>
+                                    <input type="file" id="inputBIC" accept="image/*" hidden>
+                                </div>
+                                <div class="col-6 py-3">
                                     <p>Ảnh đại diện</p>
-                                    <div class="no-image h-300px position-relative mt-3" id="imageBg" @if ($item["backgroundLogo"]) style="background-image: url('{{ $item["backgroundLogo"] }}')" @endif>
-                                        <div class="loader bg-opacity-10 bg-info d-none" id="loaderBg">
+                                    <div class="no-image h-300px position-relative mt-3" id="imageAvt" @if ($item["avatar"]) style="background-image: url('{{ $item["avatar"] }}')" @endif>
+                                        <div class="loader bg-opacity-10 bg-info d-none" id="loaderAvt">
                                             <div class="d-flex justify-content-center align-items-center h-100">
                                                 <div class="spinner-border text-success" role="status">
                                                     <span class="visually-hidden">Loading...</span>
@@ -231,45 +251,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="button" id="btnBg" class="btn btn-success d-block m-auto mt-3">Chọn ảnh khác</button>
-                                    <input type="file" id="inputBg" accept="image/*" hidden>
+                                    <button type="button" id="btnAvt" class="btn btn-success d-block m-auto mt-3">Chọn ảnh khác</button>
+                                    <input type="file" id="inputAvt" accept="image/*" hidden>
                                 </div>
-                                <input type="text" name="certification" id="certificationId" value="{{ $item["certification"] }}" hidden>
-                                <input type="text" name="businessLicense" id="businessLicenseId" value="{{ $item["businessLicense"] }}" hidden>
-                                <input type="text" name="logo" id="logoId" value="{{ $item["logo"] }}" hidden>
-                                <input type="text" name="backgroundLogo" id="backgroundLogoId" value="{{ $item["backgroundLogo"] }}" hidden>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-8 ps-4">
-                        <div class="row bg-secondary p-2 border-radius-16 bg-opacity-10 h-100">
-                            <div class="col-6 py-3">
-                                <h6>Chứng nhận an toàn thực phẩm</h6>
-                                <div class="no-image position-relative mt-3" id="imageCer" @if ($item["certification"]) style="background-image: url('{{ $item["certification"] }}')" @endif>
-                                    <div class="loader bg-opacity-10 bg-info d-none" id="loaderCer">
-                                        <div class="d-flex justify-content-center align-items-center h-100">
-                                            <div class="spinner-border text-success" role="status">
-                                                <span class="visually-hidden">Loading...</span>
-                                              </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="button" id="btnCer" class="btn btn-success d-block m-auto mt-3">Chọn ảnh khác</button>
-                                <input type="file" id="inputCer" accept="image/*" hidden>
-                            </div>
-                            <div class="col-6 py-3">
-                                <h6>Chứng nhận kinh doanh</h6>
-                                <div class="no-image position-relative mt-3" id="imageBus" @if ($item["businessLicense"]) style="background-image: url('{{ $item["businessLicense"] }}')" @endif>
-                                    <div class="loader bg-opacity-10 bg-info d-none" id="loaderBus">
-                                        <div class="d-flex justify-content-center align-items-center h-100">
-                                            <div class="spinner-border text-success" role="status">
-                                                <span class="visually-hidden">Loading...</span>
-                                              </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="button" id="btnBus" class="btn btn-success d-block m-auto mt-3">Chọn ảnh khác</button>
-                                <input type="file" id="inputBus" accept="image/*" hidden>
+                                <input type="text" name="avatar" id="avatarId" value="{{ $item["avatar"] }}" hidden>
+                                <input type="text" name="frontIdentityCard" id="ficId" value="{{ $item["frontIdentityCard"] }}" hidden>
+                                <input type="text" name="behindIdentityCard" id="bicId" value="{{ $item["behindIdentityCard"] }}" hidden>
                             </div>
                         </div>
                     </div>
@@ -311,19 +298,19 @@
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
 
-    $("#btnCer").click(function (e) {
+    $("#btnAvt").click(function (e) {
         e.preventDefault();
-        $("#inputCer").click();
+        $("#inputAvt").click();
     });
 
-    $("#btnBus").click(function (e) {
+    $("#btnFIC").click(function (e) {
         e.preventDefault();
-        $("#inputBus").click();
+        $("#inputFIC").click();
     });
 
-    $("#btnLogo").click(function (e) {
+    $("#btnBIC").click(function (e) {
         e.preventDefault();
-        $("#inputLogo").click();
+        $("#inputBIC").click();
     });
 
     $("#btnBg").click(function (e) {
@@ -331,9 +318,9 @@
         $("#inputBg").click();
     });
 
-    $("#inputLogo").change(function (e) {
+    $("#inputBIC").change(function (e) {
         e.preventDefault();
-        $('#loaderLogo').removeClass('d-none');
+        $('#loaderBIC').removeClass('d-none');
         const fileList = e.target.files;
         let fileContent = "";
 
@@ -354,11 +341,11 @@
                 },
                 dataType: 'json',
                 success: function (response) {
-                    $('#loaderLogo').addClass('d-none');
+                    $('#loaderBIC').addClass('d-none');
                     if (response?.msg?.imageUrl) {
                         console.log(response?.msg?.imageUrl)
-                        $('#imageLogo').css('background-image', 'url(' + response?.msg?.imageUrl + ')');
-                        $("#logoId").val(response?.msg?.imageUrl);
+                        $('#imageBIC').css('background-image', 'url(' + response?.msg?.imageUrl + ')');
+                        $("#bicId").val(response?.msg?.imageUrl);
                     }
                 }
             })
@@ -367,9 +354,9 @@
         fr.readAsDataURL(fileList[0]);
     });
 
-    $("#inputBg").change(function (e) {
+    $("#inputAvt").change(function (e) {
         e.preventDefault();
-        $('#loaderBg').removeClass('d-none');
+        $('#loaderAvt').removeClass('d-none');
         const fileList = e.target.files;
         let fileContent = "";
 
@@ -390,11 +377,11 @@
                 },
                 dataType: 'json',
                 success: function (response) {
-                    $('#loaderBg').addClass('d-none');
+                    $('#loaderAvt').addClass('d-none');
                     if (response?.msg?.imageUrl) {
                         console.log(response?.msg?.imageUrl)
-                        $('#imageBg').css('background-image', 'url(' + response?.msg?.imageUrl + ')');
-                        $("#backgroundLogoId").val(response?.msg?.imageUrl);
+                        $('#imageAvt').css('background-image', 'url(' + response?.msg?.imageUrl + ')');
+                        $("#avatarId").val(response?.msg?.imageUrl);
                     }
                 }
             })
@@ -403,9 +390,9 @@
         fr.readAsDataURL(fileList[0]);
     });
 
-    $("#inputCer").change(function (e) {
+    $("#inputFIC").change(function (e) {
         e.preventDefault();
-        $('#loaderCer').removeClass('d-none');
+        $('#loaderFIC').removeClass('d-none');
         const fileList = e.target.files;
         let fileContent = "";
 
@@ -426,47 +413,11 @@
                 },
                 dataType: 'json',
                 success: function (response) {
-                    $('#loaderCer').addClass('d-none');
+                    $('#loaderFIC').addClass('d-none');
                     if (response?.msg?.imageUrl) {
                         console.log(response?.msg?.imageUrl)
-                        $('#imageCer').css('background-image', 'url(' + response?.msg?.imageUrl + ')');
-                        $("#certificationId").val(response?.msg?.imageUrl);
-                    }
-                }
-            })
-        });
-
-        fr.readAsDataURL(fileList[0]);
-    });
-
-    $("#inputBus").change(function (e) {
-        e.preventDefault();
-        $('#loaderBus').removeClass('d-none');
-        const fileList = e.target.files;
-        let fileContent = "";
-
-        const fr = new FileReader();
-        fr.addEventListener("load", function () {
-            fileContent = fr.result;
-
-            $.ajax({
-                type: "post",
-                url: "{{ route('uploadFile') }}",
-                headers: headers,
-                async: true,
-                data: {
-                    image: fileContent,
-                    name: e.target.files[0].name,
-                    type: e.target.files[0].type,
-                    extension: e.target.files[0].name.split('.').pop()
-                },
-                dataType: 'json',
-                success: function (response) {
-                    $('#loaderBus').addClass('d-none');
-                    if (response?.msg?.imageUrl) {
-                        console.log(response?.msg?.imageUrl)
-                        $('#imageBus').css('background-image', 'url(' + response?.msg?.imageUrl + ')');
-                        $("#businessLicenseId").val(response?.msg?.imageUrl);
+                        $('#imageFIC').css('background-image', 'url(' + response?.msg?.imageUrl + ')');
+                        $("#ficId").val(response?.msg?.imageUrl);
                     }
                 }
             })

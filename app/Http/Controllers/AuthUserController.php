@@ -58,4 +58,26 @@ class AuthUserController extends Controller
         Cookie::forget('Bearer');
         return redirect("user/auth/login");
     }
+
+    public function account(Request $request) {
+        $bearer = Cookie::get('Bearer');
+        $user = Http::withHeaders(["authorization"=>$bearer])->get("http://localhost:3000/api/v1/user/byId");
+
+        if (isset($stores->json()["status"]) || $user["status"] !== 200) {
+            return redirect("user/auth/login");
+        }
+
+        return view("user-account", ["user"=>$user["data"]["user"]]);
+    }
+
+    public function updateAccount(Request $request) {
+        $bearer = Cookie::get('Bearer');
+        $user = Http::withHeaders(["authorization"=>$bearer])->post("http://localhost:3000/api/v1/user/byId/update", [$request->all()]);
+
+        if ($user["status"] !== 200) {
+            return redirect("user/auth/login");
+        }
+
+        return redirect("/user/account");
+    }
 }
