@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ManageStoreController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthUserController;
+use App\Http\Controllers\AuthAppController;
 use App\Http\Controllers\UploadFileController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\ProductController;
@@ -64,6 +65,19 @@ Route::prefix("upload")->group(function () {
 });
 
 Route::prefix("store")->group(function () {
-    Route::get("/", [StoreController::class, "index"]);
-    Route::get("/product/{id}", [ProductController::class, "detail"]);
+    Route::get("/", [StoreController::class, "index"])->name("app-home");
+    Route::get("/cart", [StoreController::class, "cart"])->name("app-cart");
+    Route::get("/checkout/{id}", [StoreController::class, "checkout"])->name("app-checkout");
+    Route::get("/product/{id}", [ProductController::class, "detail"])->name("product-detail");
+    Route::post("/addCart", [StoreController::class, "addCart"]);
+    Route::post("/checkout/createorder/{id}", [StoreController::class, "createOrder"]);
+});
+
+Route::prefix("app")->group(function () {
+    //Route::get("/", [AdminController::class, "storeList"]);
+    Route::get("/auth/login", [AuthAppController::class, "login"])->name("app-login");
+    Route::post("/auth/login", [AuthAppController::class, "postLogin"]);
+    Route::get("/auth/register", [AuthAppController::class, "register"])->name("app-register");
+    Route::post("/auth/register", [AuthAppController::class, "postRegister"]);
+    Route::get("/auth/logout", [AuthAppController::class, "logout"])->name("app-logout");
 });

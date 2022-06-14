@@ -27,10 +27,10 @@ class ProductController extends Controller
         return view('store', ["products"=>$products->json()["product"]]);
     }
 
-    public function detail() {
-        $id = "6290e928de422638fcc1b697";
-        $product = Http::get("http://localhost:3000/api/v1/product/".$id);
-        $products = Http::get("http://localhost:3000/api/v1/product");
+    public function detail(Request $request) {
+        $productId = $request->id;
+        $product = Http::get("http://localhost:3000/api/v1/product", ["id"=>$productId]);
+        $products = Http::get("http://localhost:3000/api/v1/products");
         return view('product', ["product"=>$product->json(), "products"=>$products->json()["product"]]);
     }
 }

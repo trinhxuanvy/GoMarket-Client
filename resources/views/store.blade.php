@@ -22,9 +22,25 @@
   <script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/fixedcolumns/4.1.0/js/dataTables.fixedColumns.min.js"></script>
   <style>
-    .logo-brand {
+  .logo-brand {
     width: 50px;
     height: 50px;
+  }
+  .icon-flex {
+    display: flex;
+  }
+  .cart-group-icon {
+    position: relative;
+  }
+
+  .cart-group-icon .cart-box-icon {
+    position: absolute;
+    top: 20%;
+    left: 2rem;
+    color: #EEEEEE;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
   }
   </style>
 </head>
@@ -36,7 +52,7 @@
   <!-- ===============================================-->
   <main class="main" id="top">
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" data-navbar-on-scroll="data-navbar-on-scroll">
-      <div class="container"><a class="navbar-brand d-inline-flex" href="index.html"><img class="d-inline-block logo-brand" src="resources/images/logo.png" alt="logo" /><span class="text-1000 fs-3 fw-bold ms-2 text-gradient">GoMarket</span></a>
+      <div class="container"><a class="navbar-brand d-inline-flex" href="{{ route('app-home') }}"><img class="d-inline-block logo-brand" src="resources/images/logo.png" alt="logo" /><span class="text-1000 fs-3 fw-bold ms-2 text-gradient">GoMarket</span></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"> </span></button>
         <form>
           <div class="input-group-icon pe-2"><i class="fas fa-search input-box-icon text-primary"></i>
@@ -56,15 +72,38 @@
               <li><button class="dropdown-item" type="button">Đồ sinh hoạt</button></li>
               <li><button class="dropdown-item" type="button">Nước uống</button></li>
             </ul>
-            <button class="btn btn-primary">Cửa hàng</button>
+            {{-- <button class="btn btn-primary">      {{count($cart)}}  @foreach($cart as $cartDetail)
+              <span>{{$cartDetail["productName"]}}</span>
+              @endforeach</button> --}}
           </div>
-          <button class="btn btn-primary badge-notification badge rounded-pill">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-              <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-            </svg>
-          </button>
-          <span id="navbarNotificationCounter" class="badge rounded-pill badge-notification bg-danger" alt="Notifications" style="color: rgb(255, 255, 255) !important;">2</span>
-          <button class="btn btn-white shadow-warning text-warning" type="submit"> <i class="fas fa-user me-2"></i>Login</button>
+          <div class="cart-group-icon">
+            <a class="btn btn-primary badge-notification badge rounded-pill" type="button" href="{{ route('app-cart') }}">
+              <span class="material-icons">shopping_cart</span>
+            </a>
+            @if ($cart)
+              @if (count($cart) > 0)
+              <span id="navbarNotificationCounter" class="cart-box-icon badge rounded-pill badge-notification bg-danger" alt="Notifications" style="color: rgb(255, 255, 255) !important;">{{count($cart)}}</span>
+              @endif
+            @endif
+          </div>
+          @if ($user)
+          <ul class="navbar-nav ms-auto me-4 me-lg-4">
+            <li class="nav-item dropdown">
+              <button class="btn btn-primary dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown"
+                aria-expanded="false">Tài khoản</button>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#!">Thay đổi thông tin</a></li>
+                <li><a class="dropdown-item" href="#!">Tình trạng hoạt động</a></li>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li><a class="dropdown-item" href="#!">Đăng xuất</a></li>
+              </ul>
+            </li>
+          </ul>
+          @else
+          <a href="{{ route('app-login') }}" class="btn btn-white shadow-warning text-warning" type="button"> <i class="fas fa-user me-2"></i>Login</a>
+          @endif
         </div>
       </div>
     </nav>
@@ -79,8 +118,10 @@
               <div class="card-body">
                 <nav>
                   <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <button class="nav-link active mb-3" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true"><i class="fas fa-motorcycle me-2"></i>Delivery</button>
-                    <button class="nav-link mb-3" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false"><i class="fas fa-shopping-bag me-2"></i>Pickup</button>
+                    <button class="nav-link active mb-3 icon-flex" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+                      <span class="material-icons">local_shipping</span>Delivery</button>
+                    <button class="nav-link mb-3 icon-flex" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
+                      <span class="material-icons">shopping_bag</span>Pickup</button>
                   </div>
                 </nav>
                 <div class="tab-content mt-3" id="nav-tabContent">
@@ -274,7 +315,7 @@
                   <div class="row gx-3 h-100 align-items-center">
                     @foreach ($products as $product)
                     <div class="col-sm-6 col-md-4 col-xl mb-5 h-100">
-                      <a href="https://www.google.com/">
+                      <a href="{{ "./store/product/".$product["_id"] }}">
                         <div class="card card-span h-100 rounded-3"><img class="img-fluid rounded-3 h-100" src={{$product["image"]}} alt="..." />
                           <div class="card-body ps-0">
                             <h5 class="fw-bold text-1000 text-truncate mb-1">{{$product["productName"]}}</h5>
@@ -282,7 +323,11 @@
                           </div>
                         </div>
                       </a>
-                      <div class="d-grid gap-2"><a class="btn btn-lg btn-danger" href="#!" role="button">Đặt vào giỏ</a></div>
+                      <div class="d-grid gap-2">
+                          <button class="btn btn-lg btn-danger btn-add-cart" value="{{$product["_id"]}}" role="button">
+                          Đặt vào giỏ
+                        </button>
+                      </div>
                     </div>
                     @endforeach
                   </div>
@@ -291,7 +336,7 @@
                   <div class="row gx-3 h-100 align-items-center">
                     @foreach ($products as $product)
                     <div class="col-sm-6 col-md-4 col-xl mb-5 h-100">
-                      <a href="https://www.google.com/">
+                      <a href="{{ "./store/product/".$product["_id"] }}">
                         <div class="card card-span h-100 rounded-3"><img class="img-fluid rounded-3 h-100" src={{$product["image"]}} alt="..." />
                           <div class="card-body ps-0">
                             <h5 class="fw-bold text-1000 text-truncate mb-1">{{$product["productName"]}}</h5>
@@ -299,7 +344,11 @@
                           </div>
                         </div>
                       </a>
-                      <div class="d-grid gap-2"><a class="btn btn-lg btn-danger" href="#!" role="button">Đặt vào giỏ</a></div>
+                      <div class="d-grid gap-2">
+                          <button class="btn btn-lg btn-danger btn-add-cart" value="{{$product["_id"]}}" role="button">
+                          Đặt vào giỏ
+                        </button>
+                      </div>
                     </div>
                     @endforeach
                   </div>
@@ -308,7 +357,7 @@
                   <div class="row gx-3 h-100 align-items-center">
                     @foreach ($products as $product)
                     <div class="col-sm-6 col-md-4 col-xl mb-5 h-100">
-                      <a href="https://www.google.com/">
+                      <a href="{{ "./store/product/".$product["_id"] }}">
                         <div class="card card-span h-100 rounded-3"><img class="img-fluid rounded-3 h-100" src={{$product["image"]}} alt="..." />
                           <div class="card-body ps-0">
                             <h5 class="fw-bold text-1000 text-truncate mb-1">{{$product["productName"]}}</h5>
@@ -316,7 +365,11 @@
                           </div>
                         </div>
                       </a>
-                      <div class="d-grid gap-2"><a class="btn btn-lg btn-danger" href="#!" role="button">Đặt vào giỏ</a></div>
+                      <div class="d-grid gap-2">
+                          <button class="btn btn-lg btn-danger btn-add-cart" value="{{$product["_id"]}}" role="button">
+                          Đặt vào giỏ
+                        </button>
+                      </div>
                     </div>
                     @endforeach
                   </div>
@@ -325,7 +378,7 @@
                   <div class="row gx-3 h-100 align-items-center">
                     @foreach ($products as $product)
                     <div class="col-sm-6 col-md-4 col-xl mb-5 h-100">
-                      <a href="https://www.google.com/">
+                      <a href="{{ "./store/product/".$product["_id"] }}">
                         <div class="card card-span h-100 rounded-3"><img class="img-fluid rounded-3 h-100" src={{$product["image"]}} alt="..." />
                           <div class="card-body ps-0">
                             <h5 class="fw-bold text-1000 text-truncate mb-1">{{$product["productName"]}}</h5>
@@ -333,7 +386,11 @@
                           </div>
                         </div>
                       </a>
-                      <div class="d-grid gap-2"><a class="btn btn-lg btn-danger" href="#!" role="button">Đặt vào giỏ</a></div>
+                      <div class="d-grid gap-2">
+                          <button class="btn btn-lg btn-danger btn-add-cart" value="{{$product["_id"]}}" role="button">
+                          Đặt vào giỏ
+                        </button>
+                      </div>
                     </div>
                     @endforeach
                   </div>
@@ -349,7 +406,6 @@
     </section>
     <!-- <section> close ============================-->
     <!-- ============================================-->
-
 
     <section id="testimonial">
       <div class="container">
@@ -687,21 +743,21 @@
               <div class="card-body py-5">
                 <div class="row justify-content-evenly">
                   <div class="col-md-3">
-                    <div class="d-flex d-md-block d-xl-flex justify-content-evenly justify-content-lg-between"><img src="assets/img/icons/discounts.png" width="100" alt="..." />
+                    <div class="d-flex d-md-block d-xl-flex justify-content-evenly justify-content-lg-between"><img src="{{ asset('resources/images/discounts.png') }}" width="100" alt="..." />
                       <div class="d-flex d-lg-block d-xl-flex flex-center">
                         <h2 class="fw-bolder text-1000 mb-0 text-gradient">Daily<br class="d-none d-md-block" />Discounts </h2>
                       </div>
                     </div>
                   </div>
                   <div class="col-md-3 hr-vertical">
-                    <div class="d-flex d-md-block d-xl-flex justify-content-evenly justify-content-lg-between"><img src="assets/img/icons/live-tracking.png" width="100" alt="..." />
+                    <div class="d-flex d-md-block d-xl-flex justify-content-evenly justify-content-lg-between"><img src="{{ asset('resources/images/live-tracking.png') }}" width="100" alt="..." />
                       <div class="d-flex d-lg-block d-xl-flex flex-center">
                         <h2 class="fw-bolder text-1000 mb-0 text-gradient">Live Tracking</h2>
                       </div>
                     </div>
                   </div>
                   <div class="col-md-3 hr-vertical">
-                    <div class="d-flex d-md-block d-xl-flex justify-content-evenly justify-content-lg-between"><img src="assets/img/icons/quick-delivery.png" width="100" alt="..." />
+                    <div class="d-flex d-md-block d-xl-flex justify-content-evenly justify-content-lg-between"><img src="{{ asset('resources/images/quick-delivery.png') }}" width="100" alt="..." />
                       <div class="d-flex d-lg-block d-xl-flex flex-center">
                         <h2 class="fw-bolder text-1000 mb-0 text-gradient">Quick Delivery </h2>
                       </div>
@@ -976,6 +1032,33 @@
   <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
   <script src="vendors/fontawesome/all.min.js"></script>
   <script src="assets/js/theme.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      var headers = {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+      $(".btn-add-cart").click(function (e) {
+          e.preventDefault();
+          var item = this;
+          $("#pageLoading").removeClass("d-none");
+              $.ajax({
+              type: "post",
+              url: "./store/addCart",
+              headers: headers,
+              data: {id: `${$(this).val()}`},
+              dataType: "json",
+              success: function (response) {
+                  console.log(response);
+                  $("#pageLoading").addClass("d-none");
+                  if (response?.msg?.cartAmount) {
+                      $("#navbarNotificationCounter").html(response.msg.cartAmount);
+                  }
+              }
+          });
+      });
+    });
+    </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600;700;900&amp;display=swap" rel="stylesheet">
 </body>
