@@ -31,18 +31,18 @@ class ShipperController extends Controller
             $query["page"] = $request->page;
         }
 
-        $orders = Http::withHeaders(["authorization"=>$bearer])->get("http://localhost:3000/api/v1/page/manage-store/all-store", $query);
+        $orders = Http::withHeaders(["authorization"=>$bearer])->get("http://localhost:3000/api/v1/shipper/order", $query);
 
-        if (!isset($orders->json()["status"])) {
-            return redirect("/shipper/auth/login");
-        }
+        // if (!isset($orders->json()["status"])) {
+        //     return redirect("/shipper/auth/login");
+        // }
 
-        if (!isset($orders->json()["data"]["stores"]["entities"])) {
-            return redirect("/shipper/auth/login");
-        }
+        // if (!isset($orders->json()["data"]["orders"]["entities"])) {
+        //     return redirect("/shipper/auth/login");
+        // }
 
         return view('manage-order-shipper', [
-            "stores"=>$orders->json()["data"]["stores"]["entities"],
+            "stores"=>$orders->json()["data"]["orders"]["entities"],
         ]);
     }
 }
