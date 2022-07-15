@@ -53,6 +53,22 @@ class StoreController extends Controller
         return view('app-cart', ["user"=>$user,"cart"=>$cart, "cartStore"=>$cartStore]);
     }
 
+    public function historyOrder(Request $request) {
+
+        $user = Cookie::get('User');
+        if(isset($user))
+        {
+            $cart = json_decode($user,TRUE)["cart"];
+            $cartStore = json_decode($user,TRUE)["cartStore"];
+        }
+        else{
+            $cart = null;
+            $cartStore = null;
+        }
+
+        return view('app-order-history', ["user"=>$user,"cart"=>$cart, "cartStore"=>$cartStore]);
+    }
+
     public function checkout(Request $request) {
         $bearer = Cookie::get('Bearer');
         $user = Cookie::get('User');
