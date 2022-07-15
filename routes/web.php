@@ -7,9 +7,11 @@ use App\Http\Controllers\ManageStoreController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthUserController;
 use App\Http\Controllers\AuthAppController;
+use App\Http\Controllers\AuthShipperController;
 use App\Http\Controllers\UploadFileController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ShipperController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +62,15 @@ Route::prefix("user")->group(function () {
     Route::post("/account/update", [AuthUserController::class, "updateAccount"])->name("userUpdateAccount");
 });
 
+Route::prefix("shipper")->group(function () {
+    Route::get("/auth/login", [AuthShipperController::class, "login"])->name("shipper-login");
+    Route::post("/auth/login", [AuthShipperController::class, "postLogin"]);
+    Route::get("/auth/register", [AuthShipperController::class, "register"])->name("shipper-register");
+    Route::post("/auth/register", [AuthShipperController::class, "postRegister"]);
+    Route::get("/auth/logout", [AuthShipperController::class, "logout"])->name("shipper-logout");
+    Route::get("/manage", [ShipperController::class, "allOrderReceive"])->name("shipper-index");
+});
+
 Route::prefix("upload")->group(function () {
     Route::post("/image", [UploadFileController::class, "uploadImage"])->name("uploadFile");
 });
@@ -67,6 +78,7 @@ Route::prefix("upload")->group(function () {
 Route::prefix("store")->group(function () {
     Route::get("/", [StoreController::class, "index"])->name("app-home");
     Route::get("/cart", [StoreController::class, "cart"])->name("app-cart");
+    Route::get("/order/history", [StoreController::class, "historyOrder"])->name("app-order-history");
     Route::get("/checkout/{id}", [StoreController::class, "checkout"])->name("app-checkout");
     Route::get("/product/{id}", [ProductController::class, "detail"])->name("product-detail");
     Route::post("/addCart", [StoreController::class, "addCart"]);

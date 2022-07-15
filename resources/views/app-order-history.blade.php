@@ -191,8 +191,8 @@
                       <table id="tableData" class="table table-bordered table-hover table-fixed border-top">
                         <thead>
                           <tr>
-                            <th style="min-width: 80px"></th>
-                            <th style="min-width: 200px">Tên sản phẩm</th>
+                            <th style="min-width: 80px">Mã đơn hàng</th>
+                            <th style="min-width: 200px">Tên cửa hàng</th>
                             <th style="min-width: 200px">Giá</th>
                             <th style="min-width: 200px">Số lượng</th>
                             <th style="min-width: 200px">Tổng giá</th>

@@ -67,6 +67,7 @@
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
               <li><button class="dropdown-item" type="button">Rau củ quả</button></li>
               <li><button class="dropdown-item" type="button">Thực phẩm sống</button></li>
+              <li><button class="dropdown-item" type="button">Thực phẩm khô, đồ hộp</button></li>
               <li><button class="dropdown-item" type="button">Trái Cây</button></li>
               <li><button class="dropdown-item" type="button">Mặt hàng gia vị</button></li>
               <li><button class="dropdown-item" type="button">Đồ sinh hoạt</button></li>
