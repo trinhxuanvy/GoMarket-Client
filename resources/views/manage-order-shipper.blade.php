@@ -167,26 +167,16 @@
                 </tr>
               </thead>
               <tbody>
-                @foreach($stores as $store)
-                <?php $item = json_decode(json_encode($store),TRUE); ?>
-                <tr class='@if ($item["status"] === 0) disable @else @endif'>
-                  <td>{{ $item["storeName"] }}</td>
+                @foreach($orders as $order)
+                <?php $item = json_decode(json_encode($order),TRUE); ?>
+                <tr class='@if ($item["status"] === "OPEN") disable @else @endif'>
+                  <td>{{ $item["customerId"] }}</td>
                   <td class="status">
-                    @if ($item["status"] === 0)
-                    Chưa xác nhận
-                    @else
-                    Đã xác nhận
-                    @endif
+                    {{$item["status"]}}
                   </td>
-                  <td>{{ Carbon\Carbon::parse($item["createdAt"])->format('d/m/Y h:m:s') }}</td>
+                  <td>{{ $item["paymentMethod"] }}</td>
                   <td>
-                    <div class=" d-flex align-items-center justify-content-center">
-                        @if ($item["status"] === 0)
-                        <a href="javascript:void(0)" class="btn btn-primary">Xem</a>
-                        @else
-                          <a href="{{ "./profile/".$item["_id"] }}" class="btn btn-success btn-sm">Xem</a>
-                        @endif
-                    </div>
+                  {{ $item["phone"] }}
                   </td>
                 </tr>
                 @endforeach
