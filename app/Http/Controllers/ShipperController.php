@@ -37,12 +37,24 @@ class ShipperController extends Controller
             return redirect("/shipper/auth/login");
         }
 
-        // if (!isset($orders->json()["data"]["orders"]["entities"])) {
-        //     return redirect("/shipper/auth/login");
-        // }
+        if (!isset($orders->json()["data"]["orders"]["entities"])) {
+            return redirect("/shipper/auth/login");
+        }
 
         return view('manage-order-shipper', [
             "orders"=>$orders->json()["data"]["orders"]["entities"],
         ]);
+    }
+    public function updateOrder(Request $request) {
+        $bearer = Cookie::get('Bearer');
+        $data = Http::withHeaders(["authorization"=>$bearer])->put("http://localhost:3000/api/v1/shipper/order/".$request->all()["id"]."/status");
+        
+        return response()->json(array("msg"=>$data->json()), 200);
+    }
+    public function cancelOrder(Request $request) {
+        $bearer = Cookie::get('Bearer');
+        $data = Http::withHeaders(["authorization"=>$bearer])->put("http://localhost:3000/api/v1/shipper/order/".$request->all()["id"]."/cancel");
+        
+        return response()->json(array("msg"=>$data->json()), 200);
     }
 }

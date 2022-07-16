@@ -129,7 +129,6 @@
       <nav class="sb-sidenav accordion sb-sidenav-light" id="sidenavAccordion">
         <div class="sb-sidenav-menu">
           <div class="nav">
-            <div class="sb-sidenav-menu-heading">Tổng quan</div>
             <div class="sb-sidenav-menu-heading">Quản lý đơn hàng</div>
             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"
               aria-expanded="false">
@@ -144,10 +143,11 @@
     <div id="layoutSidenav_content">
       <main class="p-4 ">
         <div class="p-sm-5 p-3 shadow rounded">
-          <div class="d-flex justify-content-end">
+          <div class="d-flex justify-content-between align-items-center">
+            <h1>Danh sách đơn hàng</h1>
             <form action="<?php echo route('shipper-index') ?>" method="get" class="me-2">
-              <div class="input-group mr-2">
-                <input type="text" name="search" class="form-control" placeholder="Mã hóa đơn, trạng thái, ..."
+              <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Phương thức, trạng thái, ..."
                   aria-label="Recipient's username" aria-describedby="button-addon2">
                 <button class="btn btn-outline-secondary d-flex align-items-center justify-content-center" type="submit"
                   id="button-addon2"><span class="material-icons">
@@ -156,27 +156,37 @@
               </div>
             </form>
           </div>
-          <div class="table-responsive mt-3">
+          <div class="table-responsive mt-5">
             <table id="tableData" class="table table-bordered table-hover table-fixed border-top">
               <thead>
                 <tr>
                   <th style="min-width: 300px">Tên khách hàng</th>
-                  <th style="min-width: 200px">Trạng thái</th>
-                  <th style="min-width: 250px">Phương thức thanh toán</th>
+                  <th style="min-width: 100px">Trạng thái</th>
+                  <th style="min-width: 300px">Quá trình</th>
+                  <th style="min-width: 100px">Phương thức thanh toán</th>
                   <th style="min-width: 150px">Số điện thoại</th>
+                  <th style="min-width: 400px">Hành động</th>
                 </tr>
               </thead>
               <tbody>
                 @foreach($orders as $order)
                 <?php $item = json_decode(json_encode($order),TRUE); ?>
-                <tr class='@if ($item["status"] === "OPEN") disable @else @endif'>
-                  <td>{{ $item["customerId"] }}</td>
+                <tr>
+                  <td>{{ $item["customerName"] }}</td>
                   <td class="status">
                     {{$item["status"]}}
+                  </td>
+                  <td class="status">
+                    {{$item["olderStatus"]}}
                   </td>
                   <td>{{ $item["paymentMethod"] }}</td>
                   <td>
                   {{ $item["phone"] }}
+                  </td>
+                  <td>
+                  <button value="{{ $item["_id"] }}" type="button" class='@if ($item["status"] !== "Open") disabled  @else @endif btnnhandon btn btn-primary' >Nhận đơn</button>
+                  <button value="{{ $item["_id"] }}" type="button" class="@if ($item["status"] === "Completed" || $item["status"] === "Open" || $item["status"] === "Cancelled") disabled @else @endif btnnhandon btn btn-primary">Chuyển trạng thái</button>
+                  <button value="{{ $item["_id"] }}" type="button" class="@if ($item["status"] === "Completed" || $item["status"] === "Cancelled") disabled @else @endif btnhuydon btn btn-danger">Hủy đơn</button>
                   </td>
                 </tr>
                 @endforeach
@@ -197,27 +207,42 @@
   <script src="{{ asset('resources/js/scripts.js') }}"></script>
   <script>
   $(document).ready(function() {
-    $('#tableData').DataTable({
-      scrollY: 350,
-      scrollX: true,
-      searching: false,
-      paging: false,
-      info: false,
-      fixedColumns: {
-        left: 1,
-        right: 1
-      },
-      language: {
-        info: "Số dòng: _TOTAL_",
-        emptyTable: "<img src='{{ asset('resources/images/no-data.gif') }}' style='width: 300px' />"
-      }
-    });
-
     var headers = {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
+    $(".btnnhandon").click(function (e) {
+          e.preventDefault();
+          var item = this;
+          $("#pageLoading").removeClass("d-none");
+              $.ajax({
+              type: "put",
+              url: "./manage/updateOrder",
+              headers: headers,
+              data: {id: `${$(this).val()}`},
+              dataType: "json",
+              success(res) {
+                location.reload();  
+            }
+          })
+    })
+    $(".btnhuydon").click(function (e) {
+          e.preventDefault();
+          var item = this;
+          $("#pageLoading").removeClass("d-none");
+              $.ajax({
+              type: "put",
+              url: "./manage/cancelOrder",
+              headers: headers,
+              data: {id: `${$(this).val()}`},
+              dataType: "json",
+              success(res) {
+                location.reload();  
+            }
+          })
+    })
   });
-  </script>
+  
+</script>
 </body>
 
 </html>
