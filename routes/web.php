@@ -69,6 +69,8 @@ Route::prefix("shipper")->group(function () {
     Route::post("/auth/register", [AuthShipperController::class, "postRegister"]);
     Route::get("/auth/logout", [AuthShipperController::class, "logout"])->name("shipper-logout");
     Route::get("/manage", [ShipperController::class, "allOrderReceive"])->name("shipper-index");
+    Route::put("/manage/updateOrder", [ShipperController::class, "updateOrder"]);
+    Route::put("/manage/cancelOrder", [ShipperController::class, "cancelOrder"]);
 });
 
 Route::prefix("upload")->group(function () {
