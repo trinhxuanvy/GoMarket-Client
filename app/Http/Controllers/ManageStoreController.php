@@ -55,7 +55,7 @@ class ManageStoreController extends Controller
 
         $stores = Http::withHeaders(["authorization"=>$bearer])->get("http://localhost:3000/api/v1/page/manage-store/all-store");
 
-        if (!isset($stores->json()["status"])) {
+        if (!isset($stores->json()["status"]) || $stores->json()["status"] !== 200) {
             return redirect("/user/auth/login");
         }
 

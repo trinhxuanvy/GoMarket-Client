@@ -12,7 +12,7 @@ use App\Http\Controllers\UploadFileController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShipperController;
-
+use App\Http\Controllers\ManageOrderController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -87,6 +87,9 @@ Route::prefix("store")->group(function () {
     Route::get("/product/{id}", [ProductController::class, "detail"])->name("product-detail");
     Route::post("/addCart", [StoreController::class, "addCart"]);
     Route::post("/checkout/createorder/{id}", [StoreController::class, "createOrder"]);
+    Route::get("/manage/order/{id}", [ManageOrderController::class, "manageOrder"])->name("manage-order");
+    Route::get("/manage/order/order-detail")->name("manage-order-detail");
+    Route::get("/manage/order/order-detail/{id}", [ManageOrderController::class, "manageOrderDetail"]);
 });
 
 Route::prefix("app")->group(function () {
