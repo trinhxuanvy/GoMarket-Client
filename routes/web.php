@@ -81,6 +81,8 @@ Route::prefix("store")->group(function () {
     Route::get("/", [StoreController::class, "index"])->name("app-home");
     Route::get("/cart", [StoreController::class, "cart"])->name("app-cart");
     Route::get("/order/history", [StoreController::class, "historyOrder"])->name("app-order-history");
+    Route::post("/order/orderDetail", [StoreController::class, "getOrderDetailByOrder"])->name("app-order-detail");
+    Route::put("/order/rating", [StoreController::class, "ratingOrder"])->name("app-order-rating");
     Route::get("/checkout/{id}", [StoreController::class, "checkout"])->name("app-checkout");
     Route::get("/product/{id}", [ProductController::class, "detail"])->name("product-detail");
     Route::post("/addCart", [StoreController::class, "addCart"]);

@@ -22,9 +22,25 @@
   <script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/fixedcolumns/4.1.0/js/dataTables.fixedColumns.min.js"></script>
   <style>
-    .logo-brand {
+  .logo-brand {
     width: 50px;
     height: 50px;
+  }
+  .icon-flex {
+    display: flex;
+  }
+  .cart-group-icon {
+    position: relative;
+  }
+
+  .cart-group-icon .cart-box-icon {
+    position: absolute;
+    top: 20%;
+    left: 2rem;
+    color: #EEEEEE;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
   }
   </style>
 </head>
@@ -36,39 +52,63 @@
   <!-- ===============================================-->
   <main class="main" id="top">
     <section class="py-5 overflow-hidden bg-primary" id="home">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" data-navbar-on-scroll="data-navbar-on-scroll">
-      <div class="container"><a class="navbar-brand d-inline-flex" href="index.html"><img class="d-inline-block logo-brand" src="../../resources/images/logo.png" alt="logo" /><span class="text-1000 fs-3 fw-bold ms-2 text-gradient">GoMarket</span></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"> </span></button>
-        <form>
-          <div class="input-group-icon pe-2"><i class="fas fa-search input-box-icon text-primary"></i>
-            <input class="form-control border-0 input-box bg-100" type="search" placeholder="Search Food" aria-label="Search" />
-          </div>
-        </form>
-        <div class="collapse navbar-collapse border-top border-lg-0 my-2 mt-lg-0" id="navbarSupportedContent">
-          <div class="mx-auto pt-5 pt-lg-0 d-block d-lg-none d-xl-block dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-              Ngành hàng
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-              <li><button class="dropdown-item" type="button">Rau củ quả</button></li>
-              <li><button class="dropdown-item" type="button">Thực phẩm sống</button></li>
-              <li><button class="dropdown-item" type="button">Trái Cây</button></li>
-              <li><button class="dropdown-item" type="button">Mặt hàng gia vị</button></li>
-              <li><button class="dropdown-item" type="button">Đồ sinh hoạt</button></li>
-              <li><button class="dropdown-item" type="button">Nước uống</button></li>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" data-navbar-on-scroll="data-navbar-on-scroll">
+        <div class="container"><a class="navbar-brand d-inline-flex" href="{{ route('app-home') }}"><img class="d-inline-block logo-brand" src="{{ asset('resources/images/logo.png') }}" alt="logo" /><span class="text-1000 fs-3 fw-bold ms-2 text-gradient">GoMarket</span></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"> </span></button>
+          <form>
+            <div class="input-group-icon pe-2"><i class="fas fa-search input-box-icon text-primary"></i>
+              <input class="form-control border-0 input-box bg-100" type="search" placeholder="Search Food" aria-label="Search" />
+            </div>
+          </form>
+          <div class="collapse navbar-collapse border-top border-lg-0 my-2 mt-lg-0" id="navbarSupportedContent">
+            <div class="mx-auto pt-5 pt-lg-0 d-block d-lg-none d-xl-block dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                Ngành hàng
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <li><button class="dropdown-item" type="button">Rau củ quả</button></li>
+                <li><button class="dropdown-item" type="button">Thực phẩm sống</button></li>
+                <li><button class="dropdown-item" type="button">Thực phẩm khô, đồ hộp</button></li>
+                <li><button class="dropdown-item" type="button">Trái Cây</button></li>
+                <li><button class="dropdown-item" type="button">Mặt hàng gia vị</button></li>
+                <li><button class="dropdown-item" type="button">Đồ sinh hoạt</button></li>
+                <li><button class="dropdown-item" type="button">Nước uống</button></li>
+              </ul>
+              {{-- <button class="btn btn-primary">      {{count($cart)}}  @foreach($cart as $cartDetail)
+                <span>{{$cartDetail["productName"]}}</span>
+                @endforeach</button> --}}
+            </div>
+            <div class="cart-group-icon">
+              <a class="btn btn-primary badge-notification badge rounded-pill" type="button" href="{{ route('app-cart') }}">
+                <span class="material-icons">shopping_cart</span>
+              </a>
+              @if ($cart)
+                @if (count($cart) > 0)
+                <span id="navbarNotificationCounter" class="cart-box-icon badge rounded-pill badge-notification bg-danger" alt="Notifications" style="color: rgb(255, 255, 255) !important;">{{$cartCount}}</span>
+                @endif
+              @endif
+            </div>
+            @if ($user)
+            <ul class="navbar-nav ms-auto me-4 me-lg-4">
+              <li class="nav-item dropdown">
+                <button class="btn btn-primary dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown"
+                  aria-expanded="false">Tài khoản</button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#!">Thay đổi thông tin</a></li>
+                  <li><a class="dropdown-item" href="#!">Tình trạng hoạt động</a></li>
+                  <li>
+                    <hr class="dropdown-divider" />
+                  </li>
+                  <li><a class="dropdown-item" href="#!">Đăng xuất</a></li>
+                </ul>
+              </li>
             </ul>
-            <button class="btn btn-primary">Cửa hàng</button>
+            @else
+            <a href="{{ route('app-login') }}" class="btn btn-white shadow-warning text-warning" type="button"> <i class="fas fa-user me-2"></i>Login</a>
+            @endif
           </div>
-          <button class="btn btn-primary badge-notification badge rounded-pill">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-              <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-            </svg>
-          </button>
-          <span id="navbarNotificationCounter" class="badge rounded-pill badge-notification bg-danger" alt="Notifications" style="color: rgb(255, 255, 255) !important;">2</span>
-          <button class="btn btn-white shadow-warning text-warning" type="submit"> <i class="fas fa-user me-2"></i>Login</button>
         </div>
-      </div>
-    </nav>
+      </nav>
     </section>
 
     <!-- <section> begin ============================-->

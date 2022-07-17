@@ -22,6 +22,35 @@
   <script src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/fixedcolumns/4.1.0/js/dataTables.fixedColumns.min.js"></script>
   <style>
+  .ratings{
+      margin-right:10px;
+  }
+
+  .ratings i{
+      
+      color:#cecece;
+      font-size:32px;
+  }
+
+  .rating-color{
+      color:#fbc634 !important;
+  }
+
+  .review-count{
+      font-weight:400;
+      margin-bottom:2px;
+      font-size:24px !important;
+  }
+
+  .small-ratings i{
+    color:#cecece;   
+  }
+
+  .review-stat{
+      font-weight:300;
+      font-size:18px;
+      margin-bottom:2px;
+  }
   .check-out-block {
     display: flex;
     justify-content: flex-end;
@@ -90,6 +119,9 @@
   .max-width-350 {
       max-width: 350px;
   }
+  .max-width-1000 {
+      max-width: 1000px;
+  }
 
   .item-center {
     position: sticky;
@@ -114,6 +146,26 @@
 
   .right-32 {
       right: 32px;
+  }
+  .logo-brand {
+    width: 50px;
+    height: 50px;
+  }
+  .icon-flex {
+    display: flex;
+  }
+  .cart-group-icon {
+    position: relative;
+  }
+
+  .cart-group-icon .cart-box-icon {
+    position: absolute;
+    top: 20%;
+    left: 2rem;
+    color: #EEEEEE;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
   }
   </style>
 </head>
@@ -142,34 +194,38 @@
               <li><button class="dropdown-item" type="button">Đồ sinh hoạt</button></li>
               <li><button class="dropdown-item" type="button">Nước uống</button></li>
             </ul>
-            <button class="btn btn-primary">Cửa hàng</button>
+            {{-- <button class="btn btn-primary">      {{count($cart)}}  @foreach($cart as $cartDetail)
+              <span>{{$cartDetail["productName"]}}</span>
+              @endforeach</button> --}}
           </div>
-          <button class="btn btn-primary badge-notification badge rounded-pill">
-            <span class="material-icons">shopping_cart</span>
-          </button>
+          <div class="cart-group-icon">
+            <a class="btn btn-primary badge-notification badge rounded-pill" type="button" href="{{ route('app-cart') }}">
+              <span class="material-icons">shopping_cart</span>
+            </a>
             @if ($cart)
               @if (count($cart) > 0)
-              <span id="navbarNotificationCounter" class="badge rounded-pill badge-notification bg-danger" alt="Notifications" style="color: rgb(255, 255, 255) !important;">{{count($cart)}}</span>
+              <span id="navbarNotificationCounter" class="cart-box-icon badge rounded-pill badge-notification bg-danger" alt="Notifications" style="color: rgb(255, 255, 255) !important;">{{$cartCount}}</span>
               @endif
             @endif
-            @if ($user)
-            <ul class="navbar-nav ms-auto me-4 me-lg-4">
-              <li class="nav-item dropdown">
-                <button class="btn btn-primary dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown"
-                  aria-expanded="false">Tài khoản</button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="#!">Thay đổi thông tin</a></li>
-                  <li><a class="dropdown-item" href="#!">Tình trạng hoạt động</a></li>
-                  <li>
-                    <hr class="dropdown-divider" />
-                  </li>
-                  <li><a class="dropdown-item" href="#!">Đăng xuất</a></li>
-                </ul>
-              </li>
-            </ul>
-            @else
-            <a href="{{ route('app-login') }}" class="btn btn-white shadow-warning text-warning" type="button"> <i class="fas fa-user me-2"></i>Login</a>
-            @endif
+          </div>
+          @if ($user)
+          <ul class="navbar-nav ms-auto me-4 me-lg-4">
+            <li class="nav-item dropdown">
+              <button class="btn btn-primary dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown"
+                aria-expanded="false">Tài khoản</button>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#!">Thay đổi thông tin</a></li>
+                <li><a class="dropdown-item" href="#!">Tình trạng hoạt động</a></li>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li><a class="dropdown-item" href="#!">Đăng xuất</a></li>
+              </ul>
+            </li>
+          </ul>
+          @else
+          <a href="{{ route('app-login') }}" class="btn btn-white shadow-warning text-warning" type="button"> <i class="fas fa-user me-2"></i>Login</a>
+          @endif
         </div>
       </div>
     </nav>
@@ -182,9 +238,7 @@
         <div class="container">
           <div class="row">
             <div class="col-12 pt-50">
-              @foreach ($cartStore as $item )
               <div class="card card-span mb-3 shadow-lg">
-                <h5 class="title-store">{{$item["storeName"]}}</h5>
                 <div class="card-body py-0">
                   <div class="row justify-content-center">
                     <div class="table-responsive mt-3">
@@ -192,51 +246,38 @@
                         <thead>
                           <tr>
                             <th style="min-width: 80px">Mã đơn hàng</th>
-                            <th style="min-width: 200px">Tên cửa hàng</th>
-                            <th style="min-width: 200px">Giá</th>
-                            <th style="min-width: 200px">Số lượng</th>
+                            <th style="min-width: 200px">Ngày đặt hàng</th>
                             <th style="min-width: 200px">Tổng giá</th>
-                            <th style="min-width: 60px"></th>
+                            <th style="min-width: 200px">Tình trạng</th>
+                            <th style="min-width: 200px"></th>
                           </tr>
                         </thead>
                         <tbody>
-                          @foreach($cart as $cartdetail)
-                            @if ($cartdetail["storeId"] == $item["storeId"])
-
-                              <td><img class="cart-img"  src="{{$cartdetail["productImg"]}}">
+                          @foreach($orderHistory as $order)
+                              <td>{{$order["_id"]}}
                               </td>
-                              <td>{{ $cartdetail["productName"] }}</td>
-                              <td>{{ $cartdetail["price"] }}</td>
-                              <td><input class="input-box form-control w-xl-50" type="number" value="{{ $cartdetail["amount"] }}"></td>
-                              <td>{{ $cartdetail["price"]*$cartdetail["amount"] }}</td>
+                              <td>{{ $order["createdAt"] }}</td>
+                              <td>{{ $order["total"] }}</td>
                               <td>
-                                <button class="btn btn-primary btn-sm btn-click-block" value="{{ $cartdetail["_id"] }}">
-                                  <i class="material-icons">delete</i></button>
+                                @if ( $order["olderStatus"] != "" )
+                                {{$order["olderStatus"] }}
+                                @else
+                                {{ $order["status"] }}
+                                @endif
+                              </td>
+                              <td>
+                                <button class="btn btn-primary btn-sm btn-click-block btn-review" data-bs-toggle="modal" data-bs-target="#orderDetailModal" value="{{ $order["_id"] }}">
+                                  <i class="material-icons">visibility</i></button>
+                                <button class="btn btn-primary btn-sm btn-click-block btn-rating-star" data-bs-toggle="modal" data-bs-target="#ratingModal"  value="{{ $order["_id"] }}">
+                                  <i class="material-icons">rate_review</i></button>
                               </td>
                             </tr>
-                            @endif
                           @endforeach
+                        </tbody>
                       </table>
-                      <hr>
-                        <div class="check-out-block">
-                          <a class="btn btn-primary" href="{{ "./checkout/".$item["storeId"] }}">Thanh toán</a>
-                          <span style="width: 20px"></span>
-                          <div>
-                            <div>
-                              Phí ship
-                              <span>100000</span>
-                            </div>
-                            <div>
-                              Tổng giá
-                              <span>100000</span>
-                            </div>
-                          </div>
-                        </div>
-                    </div>
                   </div>
                 </div>
               </div>
-              @endforeach
             </div>
           </div>
         </div><!-- end of .container-->
@@ -254,7 +295,163 @@
 
   <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
+
+  <!-- Modal -->
+  <div class="modal fade" id="orderDetailModal" tabindex="-1" aria-labelledby="orderDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog max-width-1000">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="orderDetailModalLabel">Chi Tiết Đơn Hàng</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive mt-3">
+          <table id="tableData" class="table table-bordered table-hover table-fixed border-top">
+            <thead>
+              <tr>
+                <th style="min-width: 80px"></th>
+                <th style="min-width: 200px">Tên sản phẩm</th>
+                <th style="min-width: 200px">Giá</th>
+                <th style="min-width: 200px">Số lượng</th>
+                <th style="min-width: 200px">Tổng giá</th>
+              </tr>
+            </thead>
+            <tbody id="order-details">
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+<!-- Modal -->
+<div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ratingModalLabel">Đánh giá đơn hàng</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="ratings">
+              <i class="material-icons rating-button">star</i>
+              <i class="material-icons rating-button">star</i>
+              <i class="material-icons rating-button">star</i>
+              <i class="material-icons rating-button">star</i>
+              <i class="material-icons rating-button">star</i>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
   <script src="{{ asset('resources/js/scripts.js') }}"></script>
+  <script>
+  
+    $(document).ready(function () {
+
+      var headers = {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+
+      $('.btn-review').click(function (e) { 
+
+          e.preventDefault();
+          var item = this;
+          $("#pageLoading").removeClass("d-none");
+              $.ajax({
+              type: "post",
+              url: "{{ route('app-order-detail')}}",
+              headers: headers,
+              data: {id: `${$(this).val()}`},
+              dataType: "json",
+              success(res) {
+                console.log(res);
+                if (res?.msg) 
+                {
+                  var orderDetails = res.msg;
+                  // $("#navbarNotificationCounter").html(response.msg.cartAmount);
+                  console.log(res.msg);
+
+
+                  var div = document.getElementById("order-details");
+                  console.log(div)
+
+                  var html = "";
+                  for (var i=0;i<orderDetails.length;i++) 
+                  {
+                      html += `<tr>
+                                  <td><img class="cart-img"  src="`+ orderDetails[i]["productImg"]+`">
+                                  </td>
+                                  <td>`+ orderDetails[i]["productName"] +`</td>
+                                  <td>`+ orderDetails[i]["price"] +`</td>
+                                  <td><input class="input-box form-control w-xl-50" type="number" value="`+ orderDetails[i]["amount"] +`"></td>
+                                  <td>`+ orderDetails[i]["price"]*orderDetails[i]["amount"] +`</td>
+                              </tr>`
+                  }
+
+                  div.innerHTML = html;
+
+                }
+            }
+          })
+
+      });
+
+      $('.btn-rating-star').click(function (e) { 
+        var star = 1;
+        var rating = $(".rating-button")
+        $(rating).removeClass('rating-color');
+        for(let i = 0; i < 5; i++)
+        {
+          $(rating[i]).click(function (e) { 
+            console.log(i+1)
+            star = i +1;
+            for(let j = 0; j < 5; j++)
+            {
+              if (j <= i)
+              {
+                $(rating[j]).addClass('rating-color');
+              }
+              else
+              {
+                $(rating[j]).removeClass('rating-color');
+              }
+            }
+          });
+        }
+        e.preventDefault();
+        var item = this;
+        $("#pageLoading").removeClass("d-none");
+            $.ajax({
+            type: "put",
+            url: "{{ route('app-order-rating')}}",
+            headers: headers,
+            data: {id: `${$(this).val()}`, star: star},
+            dataType: "json",
+            success(res) {
+              console.log(res);
+              if (res?.msg) 
+              {
+                location.reload();  
+              }
+          }
+        })
+
+      });
+    })
+
+  </script>
 </body>
 
 </html>
