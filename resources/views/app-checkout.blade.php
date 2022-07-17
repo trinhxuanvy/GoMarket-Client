@@ -110,6 +110,26 @@
   .right-32 {
       right: 32px;
   }
+  .logo-brand {
+    width: 50px;
+    height: 50px;
+  }
+  .icon-flex {
+    display: flex;
+  }
+  .cart-group-icon {
+    position: relative;
+  }
+
+  .cart-group-icon .cart-box-icon {
+    position: absolute;
+    top: 20%;
+    left: 2rem;
+    color: #EEEEEE;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
   </style>
 </head>
 
@@ -131,39 +151,44 @@
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
               <li><button class="dropdown-item" type="button">Rau củ quả</button></li>
               <li><button class="dropdown-item" type="button">Thực phẩm sống</button></li>
+              <li><button class="dropdown-item" type="button">Thực phẩm khô, đồ hộp</button></li>
               <li><button class="dropdown-item" type="button">Trái Cây</button></li>
               <li><button class="dropdown-item" type="button">Mặt hàng gia vị</button></li>
               <li><button class="dropdown-item" type="button">Đồ sinh hoạt</button></li>
               <li><button class="dropdown-item" type="button">Nước uống</button></li>
             </ul>
-            <button class="btn btn-primary">Cửa hàng</button>
+            {{-- <button class="btn btn-primary">      {{count($cart)}}  @foreach($cart as $cartDetail)
+              <span>{{$cartDetail["productName"]}}</span>
+              @endforeach</button> --}}
           </div>
-          <button class="btn btn-primary badge-notification badge rounded-pill">
-            <span class="material-icons">shopping_cart</span>
-          </button>
+          <div class="cart-group-icon">
+            <a class="btn btn-primary badge-notification badge rounded-pill" type="button" href="{{ route('app-cart') }}">
+              <span class="material-icons">shopping_cart</span>
+            </a>
             @if ($cart)
               @if (count($cart) > 0)
-              <span id="navbarNotificationCounter" class="badge rounded-pill badge-notification bg-danger" alt="Notifications" style="color: rgb(255, 255, 255) !important;">{{count($cart)}}</span>
+              <span id="navbarNotificationCounter" class="cart-box-icon badge rounded-pill badge-notification bg-danger" alt="Notifications" style="color: rgb(255, 255, 255) !important;">{{$cartCount}}</span>
               @endif
             @endif
-            @if ($user)
-            <ul class="navbar-nav ms-auto me-4 me-lg-4">
-              <li class="nav-item dropdown">
-                <button class="btn btn-primary dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown"
-                  aria-expanded="false">Tài khoản</button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="#!">Thay đổi thông tin</a></li>
-                  <li><a class="dropdown-item" href="#!">Tình trạng hoạt động</a></li>
-                  <li>
-                    <hr class="dropdown-divider" />
-                  </li>
-                  <li><a class="dropdown-item" href="#!">Đăng xuất</a></li>
-                </ul>
-              </li>
-            </ul>
-            @else
-            <a href="{{ route('app-login') }}" class="btn btn-white shadow-warning text-warning" type="button"> <i class="fas fa-user me-2"></i>Login</a>
-            @endif
+          </div>
+          @if ($user)
+          <ul class="navbar-nav ms-auto me-4 me-lg-4">
+            <li class="nav-item dropdown">
+              <button class="btn btn-primary dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown"
+                aria-expanded="false">Tài khoản</button>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#!">Thay đổi thông tin</a></li>
+                <li><a class="dropdown-item" href="#!">Tình trạng hoạt động</a></li>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li><a class="dropdown-item" href="#!">Đăng xuất</a></li>
+              </ul>
+            </li>
+          </ul>
+          @else
+          <a href="{{ route('app-login') }}" class="btn btn-white shadow-warning text-warning" type="button"> <i class="fas fa-user me-2"></i>Login</a>
+          @endif
         </div>
       </div>
     </nav>
