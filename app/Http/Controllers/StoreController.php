@@ -12,7 +12,7 @@ class StoreController extends Controller
     public function __construct() {}
 
     public function index(Request $request) {
-        $paginationSize = 2;
+        $paginationSize = 8;
         $query = array("page"=>1, "search"=>"");
         $paginationUrls = array();
         $url = $request->url();

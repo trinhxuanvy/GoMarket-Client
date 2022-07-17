@@ -178,7 +178,8 @@
                   <th style="min-width: 300px">Tên cửa hàng</th>
                   <th style="min-width: 200px">Tình trạng</th>
                   <th style="min-width: 250px">Ngày đăng ký</th>
-                  <th style="min-width: 150px">Xem chi tiết</th>
+                  <th style="min-width: 150px">Xem thông tin</th>
+                  <th style="min-width: 150px">Quản lý đơn hàng</th>
                 </tr>
               </thead>
               <tbody>
@@ -197,9 +198,18 @@
                   <td>
                     <div class=" d-flex align-items-center justify-content-center">
                         @if ($item["status"] === 0)
-                        <a href="javascript:void(0)" class="btn btn-primary">Xem</a>
+                        <a href="javascript:void(0)" class="btn btn-primary disabled btn-sm">Xem</a>
                         @else
                           <a href="{{ "./profile/".$item["_id"] }}" class="btn btn-success btn-sm">Xem</a>
+                        @endif
+                    </div>
+                  </td>
+                  <td>
+                    <div class=" d-flex align-items-center justify-content-center">
+                        @if ($item["status"] === 0)
+                        <a href="javascript:void(0)" class="btn btn-warning disabled btn-sm">Xem</a>
+                        @else
+                          <a href="{{ "./order/".$item["_id"] }}" class="btn btn-warning btn-sm">Xem</a>
                         @endif
                     </div>
                   </td>
@@ -262,10 +272,11 @@
                                             <input type="text" class="form-control" id="address" name="address" value="" required >
                                         </div>
                                     </div>
-                                    <input type="text" name="certification" id="certificationId" value="" hidden required>
-                                    <input type="text" name="businessLicense" id="businessLicenseId" value="" hidden required>
-                                    <input type="text" name="logo" id="logoId" value="" hidden required>
-                                    <input type="text" name="backgroundLogo" id="backgroundLogoId" value="" hidden required>
+                                    <input type="text" name="eqedafaf" id="5651" value="123" hidden>
+                                    <input type="text" name="certification" id="certificationId" value="" hidden>
+                                    <input type="text" name="businessLicense" id="businessLicenseId" value="" hidden>
+                                    <input type="text" name="logo" id="logoId" value="123" hidden required>
+                                    <input type="text" name="backgroundLogo" id="backgroundLogoId" value="123" hidden>
                                 </div>
                             </div>
                         </form>
@@ -301,34 +312,6 @@
                                     </div>
                                     <button type="button" id="btnBg" class="btn btn-success d-block m-auto mt-3">Chọn ảnh khác</button>
                                     <input type="file" id="inputBg" accept="image/*" hidden>
-                                </div>
-                                <div class="col-12 py-3">
-                                    <h6>Chứng nhận an toàn thực phẩm</h6>
-                                    <div class="no-image position-relative mt-3" id="imageCer">
-                                        <div class="loader bg-opacity-10 bg-info d-none" id="loaderCer">
-                                            <div class="d-flex justify-content-center align-items-center h-100">
-                                                <div class="spinner-border text-success" role="status">
-                                                    <span class="visually-hidden">Loading...</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button type="button" id="btnCer" class="btn btn-success d-block m-auto mt-3">Chọn ảnh khác</button>
-                                    <input type="file" id="inputCer" accept="image/*" hidden>
-                                </div>
-                                <div class="col-12 py-3">
-                                    <h6>Chứng nhận kinh doanh</h6>
-                                    <div class="no-image position-relative mt-3" id="imageBus">
-                                        <div class="loader bg-opacity-10 bg-info d-none" id="loaderBus">
-                                            <div class="d-flex justify-content-center align-items-center h-100">
-                                                <div class="spinner-border text-success" role="status">
-                                                    <span class="visually-hidden">Loading...</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button type="button" id="btnBus" class="btn btn-success d-block m-auto mt-3">Chọn ảnh khác</button>
-                                    <input type="file" id="inputBus" accept="image/*" hidden>
                                 </div>
                             </div>
                         </div>
@@ -415,6 +398,16 @@
     $("#btnBus").click(function (e) {
         e.preventDefault();
         $("#inputBus").click();
+    });
+
+    $("#btnBg").click(function (e) {
+        e.preventDefault();
+        $("#inputBg").click();
+    });
+
+    $("#btnLogo").click(function (e) {
+        e.preventDefault();
+        $("#inputLogo").click();
     });
 
     $("#inputCer").change(function (e) {
@@ -526,7 +519,7 @@
                     if (response?.msg?.imageUrl) {
                         console.log(response?.msg?.imageUrl)
                         $('#imageLogo').css('background-image', 'url(' + response?.msg?.imageUrl + ')');
-                        $("#logoId").val(response?.msg?.imageUrl);
+                        //$("#logoId").val(response?.msg?.imageUrl);
                     }
                 }
             })
@@ -540,7 +533,7 @@
         $('#loaderBg').removeClass('d-none');
         const fileList = e.target.files;
         let fileContent = "";
-
+        console.log("Dsafavgew")
         const fr = new FileReader();
         fr.addEventListener("load", function () {
             fileContent = fr.result;
@@ -562,7 +555,8 @@
                     if (response?.msg?.imageUrl) {
                         console.log(response?.msg?.imageUrl)
                         $('#imageBg').css('background-image', 'url(' + response?.msg?.imageUrl + ')');
-                        $("#backgroundLogoId").val(response?.msg?.imageUrl);
+                        //$("#backgroundLogoId").val(response?.msg?.imageUrl);
+                        console.log($("#backgroundLogoId"));
                     }
                 }
             })
